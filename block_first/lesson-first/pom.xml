@@ -18,7 +18,7 @@
         <com.google.guava.version>23.4-jre</com.google.guava.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
-        <net.sf.proguard-base.version>4.11</net.sf.proguard-base.version>
+        <net.sf.proguard-base.version>5.3.3</net.sf.proguard-base.version>
         <com.github.wvengen.proguard-maven-plugin.version>2.0.14</com.github.wvengen.proguard-maven-plugin.version>
     </properties>
 
@@ -34,21 +34,6 @@
         <finalName>${project.name}</finalName>
 
         <plugins>
-            <!-- create *.jar and add manifest file->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                        <compress>true</compress>
-                        <manifest>
-                            <mainClass>ru.mamsta.otus.blockfirst.lessonfirst.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>-->
             <!--add dependencies in *.jar archive-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -69,12 +54,15 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <compress>true</compress>
                         <manifest>
                             <mainClass>ru.mamsta.otus.blockfirst.lessonfirst.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
+            <!--obfuscation-->
             <plugin>
                 <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
@@ -87,18 +75,20 @@
                 </executions>
                 <configuration>
                     <proguardVersion>${net.sf.proguard-base.version}</proguardVersion>
+                    <options>
+                        <option>-dontnote</option>
+                        <option>-dontwarn</option>
+                        <option>-keep public class * { *; }</option>
+                    </options>
+                    <includeDependency>true</includeDependency>
+                    <obfuscate>true</obfuscate>
+                    <injar>${project.name}.jar</injar>
+                    <outjar>${project.name}-small.jar</outjar>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>
                     </libs>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sf.proguard</groupId>
-                        <artifactId>proguard-base</artifactId>
-                        <version>${net.sf.proguard-base.version}</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
