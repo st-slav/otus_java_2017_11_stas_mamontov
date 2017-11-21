@@ -18,6 +18,8 @@
         <com.google.guava.version>23.4-jre</com.google.guava.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
+        <net.sf.proguard-base.version>4.11</net.sf.proguard-base.version>
+        <com.github.wvengen.proguard-maven-plugin.version>2.0.14</com.github.wvengen.proguard-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -72,6 +74,31 @@
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>${com.github.wvengen.proguard-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>proguard</goal></goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <proguardVersion>${net.sf.proguard-base.version}</proguardVersion>
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                    </libs>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>${net.sf.proguard-base.version}</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
