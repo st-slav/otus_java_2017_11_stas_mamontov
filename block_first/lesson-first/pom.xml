@@ -78,7 +78,7 @@
                     <options>
                         <option>-dontnote</option>
                         <option>-dontwarn</option>
-                        <option>-keep public class * { *; }</option>
+                        <option>-keep public class ru.mamsta.otus.blockfirst.lessonfirst.Main { *; main *; }</option>
                     </options>
                     <includeDependency>true</includeDependency>
                     <obfuscate>true</obfuscate>
