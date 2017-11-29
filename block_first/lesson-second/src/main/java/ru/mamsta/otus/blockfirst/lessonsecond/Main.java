@@ -43,7 +43,7 @@ public class Main {
             System.out.println("memory for 'new ArrayList<String>()': " +
                     StandMemory.monitoring(runtime, () -> new ArrayList<String>()));
 
-            System.out.println("memory for 'new ArrayList<String>()' and add " + listSize + " empty string: " +
+            System.out.println("memory for 1 object in 'new ArrayList<String>()' and add " + listSize + " empty string: " +
                     StandMemory.monitoring(runtime, () -> {
                         List<String> l = new ArrayList<>();
                         for(int i = 0; i < listSize; i++) {
@@ -52,7 +52,7 @@ public class Main {
                         return l;
                     })/listSize);
 
-            System.out.println("memory for 'new ArrayList<String>()' and add " + listSize + " random string length " + stringSize + ": " +
+            System.out.println("memory for 1 object in 'new ArrayList<String>()' and add " + listSize + " random string length " + stringSize + ": " +
                     StandMemory.monitoring(runtime, () -> {
                         List<String> l = new ArrayList<>();
                         for(int i = 0; i < listSize; i++) {
@@ -61,7 +61,7 @@ public class Main {
                         return l;
                     })/listSize);
 
-            System.out.println("memory for 'new ArrayList<String>()' and add " + listSize + " string with char array length " + stringSize + ": " +
+            System.out.println("memory for 1 object in 'new ArrayList<String>()' and add " + listSize + " string with char array length " + stringSize + ": " +
                     StandMemory.monitoring(runtime, () -> {
                         List<String> l = new ArrayList<>();
                         for(int i = 0; i < listSize; i++) {
@@ -70,17 +70,17 @@ public class Main {
                             return l;
                     })/listSize);
 
-            System.out.println("memory for 'new String[]' with size " + listSize + ": " +
+            System.out.println("memory for 1 object in 'new String[]' with size " + listSize + ": " +
                     StandMemory.monitoring(runtime, () -> new String[listSize])/listSize);
 
-            System.out.println("memory for 'new String[]' with size " + listSize + " and object is char array length " + stringSize + ": " +
+            System.out.println("memory for 1 object in 'new String[]' with size " + listSize + " and object is char array length " + stringSize + ": " +
                     StandMemory.monitoring(runtime, () -> {
                         String[] ss = new String[listSize];
                         Stream.of(ss).forEach(s -> s = new String(new char[stringSize]));
                         return ss;
                     })/listSize);
 
-            System.out.println("memory for 'new String[]' with size " + listSize + " and object is random string with length " + stringSize + ": " +
+            System.out.println("memory for 1 object in 'new String[]' with size " + listSize + " and object is random string with length " + stringSize + ": " +
                     StandMemory.monitoring(runtime, () -> {
                         String[] ss = new String[listSize];
                         Stream.of(ss).forEach(s -> s = getRndStr(stringSize));
@@ -90,7 +90,7 @@ public class Main {
             System.out.println("memory for 'new LinkedList<String>()': " +
                     StandMemory.monitoring(runtime, () -> new LinkedList<String>()));
 
-            System.out.println("memory for 'new LinkedList<String>()' and add " + listSize + " empty string: " +
+            System.out.println("memory for 1 object in 'new LinkedList<String>()' and add " + listSize + " empty string: " +
                     StandMemory.monitoring(runtime, () -> {
                         List<String> l = new LinkedList<>();
                         for(int i = 0; i < listSize; i++) {
@@ -99,7 +99,7 @@ public class Main {
                         return l;
                     })/listSize);
 
-            System.out.println("memory for 'new LinkedList<String>()' and add " + listSize + " random string length " + stringSize + ": " +
+            System.out.println("memory for 1 object in 'new LinkedList<String>()' and add " + listSize + " random string length " + stringSize + ": " +
                     StandMemory.monitoring(runtime, () -> {
                         List<String> l = new LinkedList<>();
                         for(int i = 0; i < listSize; i++) {
@@ -108,7 +108,7 @@ public class Main {
                         return l;
                     })/listSize);
 
-            System.out.println("memory for 'new LinkedList<String>()' and add " + listSize + " and object is char array length " + stringSize + ": " +
+            System.out.println("memory for 1 object in 'new LinkedList<String>()' and add " + listSize + " and object is char array length " + stringSize + ": " +
                     StandMemory.monitoring(runtime, () -> {
                         List<String> l = new LinkedList<>();
                         for(int i = 0; i < listSize; i++) {
