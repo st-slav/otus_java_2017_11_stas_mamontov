@@ -41,8 +41,8 @@
                 <configuration>
                     <executable>java</executable>
                     <arguments>
-                        <argument>-Xms256m</argument>
-                        <argument>-Xmx256m</argument>
+                        <argument>-Xms512m</argument>
+                        <argument>-Xmx512m</argument>
                         <argument>-XX:NewRatio=3</argument>
                         <argument>-classpath</argument>
                         <classpath/>
