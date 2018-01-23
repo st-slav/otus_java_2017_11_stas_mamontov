@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public class MyHashMap implements Map<T, E> {
+public class MyHashMap<T, E> implements Map<T, E> {
 
     public int size() {
         return 0;

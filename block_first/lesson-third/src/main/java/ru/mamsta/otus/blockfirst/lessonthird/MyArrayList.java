@@ -1,18 +1,13 @@
 package ru.mamsta.otus.blockfirst.lessonthird;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
-public class MyArrayList implements List<T> {
-
-    private static int DEFAULT_SIZE = 8;
+public class MyArrayList<T> implements List<T> {
 
     private Object[] array;
 
     public MyArrayList() {
-        this.array = new Object[DEFAULT_SIZE];
+
     }
 
     public MyArrayList(int size) {
@@ -40,7 +35,7 @@ public class MyArrayList implements List<T> {
     }
 
     public Object[] toArray() {
-        return (Object[]) array;
+        return array;
     }
 
     public <T1> T1[] toArray(T1[] a) {
@@ -112,7 +107,12 @@ public class MyArrayList implements List<T> {
         return null;
     }
 
-    public List<T> subList(int fromIndex, int toIndex) {
-        return null;
+    public List<T> subList(final int fromIndex, final int toIndex) {
+        int fromIndexTmp = fromIndex;
+        Object[] tmp = new Object[toIndex - fromIndexTmp];
+        for(int i = 0; fromIndex <= toIndex; fromIndexTmp++, i++) {
+            tmp[i] = array[fromIndexTmp];
+        }
+        return new MyArrayList<T>(tmp);
     }
 }
