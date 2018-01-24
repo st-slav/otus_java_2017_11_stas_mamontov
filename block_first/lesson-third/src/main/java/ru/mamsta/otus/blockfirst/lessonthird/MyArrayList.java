@@ -6,12 +6,19 @@ public class MyArrayList<T> implements List<T> {
 
     private Object[] array;
 
+    private int max_size = Integer.MAX_VALUE;
+
+    private int size;
+
     public MyArrayList() {
 
     }
 
     public MyArrayList(int size) {
-        this.array = new Object[size];
+        if(size > max_size) {
+            throw new OutOfMemoryError();
+        }
+        max_size = size;
     }
 
     public MyArrayList(Object... array) {
@@ -19,14 +26,21 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public int size() {
-        return array.length;
+        return size;
     }
 
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     public boolean contains(Object o) {
+        if (o != null) {
+            for (int i = 0; i < size; i++) {
+                if(o.equals(array[i])) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -47,6 +61,9 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public boolean remove(Object o) {
+        for(int i = 0; i < size; i++) {
+
+        }
         return false;
     }
 
@@ -75,7 +92,10 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public T get(int index) {
-        return null;
+        if(index < 0) {
+            throw new RuntimeException("index < 0");
+        }
+        return (T) array[index];
     }
 
     public T set(int index, T element) {
