@@ -17,6 +17,8 @@ public class MyArrayList<T> implements List<T> {
     public MyArrayList(int size) {
         if(size > max_size) {
             throw new OutOfMemoryError();
+        } else if (size < 0) {
+            throw new RuntimeException("index for array < 0");
         }
         max_size = size;
     }
@@ -92,9 +94,7 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public T get(int index) {
-        if(index < 0) {
-            throw new RuntimeException("index < 0");
-        }
+        checkIndex(index);
         return (T) array[index];
     }
 
@@ -134,5 +134,11 @@ public class MyArrayList<T> implements List<T> {
             tmp[i] = array[fromIndexTmp];
         }
         return new MyArrayList<T>(tmp);
+    }
+
+    private void checkIndex(int index) {
+        if(index < 0) {
+            throw new RuntimeException("index < 0");
+        }
     }
 }

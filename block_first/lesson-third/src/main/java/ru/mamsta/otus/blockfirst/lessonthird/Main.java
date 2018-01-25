@@ -1,9 +1,6 @@
 package ru.mamsta.otus.blockfirst.lessonthird;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class Main {
 
@@ -22,5 +19,11 @@ public class Main {
                 return 0;
             }
         });
+
+       Map<String, String> map = new HashMap<>();
+
+        for(Map.Entry<String, String> s : map.entrySet()) {
+
+        }
     }
 }

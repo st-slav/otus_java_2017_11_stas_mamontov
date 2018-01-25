@@ -65,4 +65,8 @@ public class MyHashMap<K, V> implements Map<K, V> {
     public Set<Entry<K, V>> entrySet() {
         return null;
     }
+
+    public class MyEntry<K, V> {
+
+    }
 }
