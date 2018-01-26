@@ -1,10 +1,15 @@
 package ru.mamsta.otus.blockfirst.lessonthird;
 
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
+
 import java.util.*;
 
 public class MyArrayList<T> implements List<T> {
 
     private Object[] array;
+
+    private Object[] EMPTY_ARRAY = {};
 
     private int max_size = Integer.MAX_VALUE;
 
@@ -90,21 +95,28 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public void clear() {
-
+        if (array.length > 0) {
+            array = EMPTY_ARRAY;
+        }
     }
 
     public T get(int index) {
-        checkIndex(index);
+        checkIndexLimits(index);
+        checkIndexForArray(index);
         return (T) array[index];
     }
 
     public T set(int index, T element) {
+        checkNotNullElement(element);
+        checkIndexForArray(index);
+        checkNotNullElement(element);
         array[index] = element;
         return element;
     }
 
     public void add(int index, T element) {
-
+        checkIndexForArray(index);
+        checkNotNullElement(element);
     }
 
     public T remove(int index) {
@@ -136,9 +148,21 @@ public class MyArrayList<T> implements List<T> {
         return new MyArrayList<T>(tmp);
     }
 
-    private void checkIndex(int index) {
+    private void checkIndexLimits(int index) {
         if(index < 0) {
             throw new RuntimeException("index < 0");
+        } else if (index > max_size) {
+            throw new RuntimeException("index > max size (" + max_size + ")" );
         }
+    }
+
+    private void checkIndexForArray(int index) {
+        if(index > array.length || index < 0)
+            throw new RuntimeException(this.getClass().getName() + " not founnd index: " + index);
+    }
+
+    private void checkNotNullElement(Object o) {
+        if(Objects.isNull(o))
+            throw new NullPointerException(o.getClass().getName() + " == null");
     }
 }
