@@ -1,8 +1,5 @@
 package ru.mamsta.otus.blockfirst.lessonthird;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
-
 import java.util.*;
 
 public class MyArrayList<T> implements List<T> {
@@ -13,42 +10,31 @@ public class MyArrayList<T> implements List<T> {
 
     private int max_size = Integer.MAX_VALUE;
 
-    private int size;
-
     public MyArrayList() {
-
+        array = EMPTY_ARRAY;
     }
 
     public MyArrayList(int size) {
-        if(size > max_size) {
-            throw new OutOfMemoryError();
-        } else if (size < 0) {
-            throw new RuntimeException("index for array < 0");
-        }
+        checkIndexLimits(size);
         max_size = size;
+        array = EMPTY_ARRAY;
     }
 
     public MyArrayList(Object... array) {
+        checkNotNullElement(array);
         this.array = array;
     }
 
     public int size() {
-        return size;
+        return array.length;
     }
 
     public boolean isEmpty() {
-        return size == 0;
+        return array.length == 0;
     }
 
     public boolean contains(Object o) {
-        if (o != null) {
-            for (int i = 0; i < size; i++) {
-                if(o.equals(array[i])) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return indexOf(o) < 0 ? false : true;
     }
 
     public Iterator<T> iterator() {
@@ -64,13 +50,22 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public boolean add(T t) {
-        return false;
+        checkNotNullElement(t);
+        int newIndex = array.length + 1;
+        if((newIndex) > max_size) {
+            throw new RuntimeException(this.getClass().getCanonicalName() + " crowded; size: " + array.length + "; max size: " + max_size);
+        }
+        Object[] oldArray = array;
+        array = new Object[newIndex];
+        System.arraycopy(oldArray, 0, array, 0, oldArray.length);
+        array[oldArray.length] = t;
+        return true;
     }
 
     public boolean remove(Object o) {
-        for(int i = 0; i < size; i++) {
-
-        }
+        try {
+            return !Objects.isNull(remove(indexOf(o)));
+        } catch (Throwable ex) { }
         return false;
     }
 
@@ -79,7 +74,17 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public boolean addAll(Collection<? extends T> c) {
-        return false;
+        checkNotNullElement(c);
+        if(array.length == 0) {
+            array = c.toArray();
+        }
+        Object[] oldArray = array;
+        Object[] arrayForAdd = c.toArray();
+        int newIndex = oldArray.length + arrayForAdd.length;
+        array = new Object[newIndex];
+        System.arraycopy(oldArray, 0, array, 0, oldArray.length);
+        System.arraycopy(arrayForAdd, 0, array, oldArray.length, arrayForAdd.length);
+        return true;
     }
 
     public boolean addAll(int index, Collection<? extends T> c) {
@@ -102,33 +107,62 @@ public class MyArrayList<T> implements List<T> {
 
     public T get(int index) {
         checkIndexLimits(index);
-        checkIndexForArray(index);
+        checkIndexInArray(index);
         return (T) array[index];
     }
 
     public T set(int index, T element) {
-        checkNotNullElement(element);
-        checkIndexForArray(index);
+        checkIndexInArray(index);
         checkNotNullElement(element);
         array[index] = element;
         return element;
     }
 
     public void add(int index, T element) {
-        checkIndexForArray(index);
+        checkIndexInArray(index);
         checkNotNullElement(element);
+        array[index] = element;
     }
 
     public T remove(int index) {
-        return null;
+        checkIndexInArray(index);
+        if (array.length == 1) {
+            T res = (T) array[index];
+            array = EMPTY_ARRAY;
+            return res;
+        }
+        int newIndex = array.length-1;
+        Object[] oldArray = array;
+        array = new Object[newIndex];
+        int toIndex = index+1;
+        System.arraycopy(oldArray, 0, array, 0, index);
+        System.arraycopy(oldArray, toIndex, array, index, (oldArray.length - toIndex));
+        return (T)oldArray[index];
     }
 
     public int indexOf(Object o) {
-        return 0;
+        checkNotNullElement(o);
+        if(!this.isEmpty()) {
+            for (int i = 0; i < array.length; i++) {
+                if(array[i].equals(o)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     public int lastIndexOf(Object o) {
-        return 0;
+        checkNotNullElement(o);
+        int index = -1;
+        if(!this.isEmpty()) {
+            for (int i = 0; i < array.length; i++) {
+                if(array[i].equals(o)) {
+                    index = i;
+                }
+            }
+        }
+        return index;
     }
 
     public ListIterator<T> listIterator() {
@@ -140,6 +174,13 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public List<T> subList(final int fromIndex, final int toIndex) {
+        checkIndexInArray(fromIndex);
+        checkIndexInArray(toIndex);
+        if(fromIndex > toIndex) {
+            throw new RuntimeException("fromIndex > toIndex");
+        } if (fromIndex == toIndex) {
+            return new MyArrayList<T>();
+        }
         int fromIndexTmp = fromIndex;
         Object[] tmp = new Object[toIndex - fromIndexTmp];
         for(int i = 0; fromIndex <= toIndex; fromIndexTmp++, i++) {
@@ -156,9 +197,9 @@ public class MyArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndexForArray(int index) {
+    private void checkIndexInArray(int index) {
         if(index > array.length || index < 0)
-            throw new RuntimeException(this.getClass().getName() + " not founnd index: " + index);
+            throw new RuntimeException(this.getClass().getName() + " not found index: " + index + "; size: " + array.length);
     }
 
     private void checkNotNullElement(Object o) {
