@@ -7,7 +7,8 @@ public class Main {
     public static void main(String[] args) {
         List<String> ss = new ArrayList<>(5);
         System.out.println(ss.size());
-        ss.add(" ");
+        ss.add("1 ");
+        ss.add("2 ");
 //        ss.add(null);
 //        ss.toArray();
 //        ss.get(2);
@@ -21,6 +22,12 @@ public class Main {
         myStrings.add("one");
         myStrings.add("three");
         myStrings.add("four");
+        myStrings.addAll(2, ss);
+        System.out.println("--------------------");
+        for(int i = 0; i < myStrings.size(); i++) {
+            System.out.println(myStrings.get(i));
+        }
+        System.out.println("--------------------");
         System.out.println(myStrings.toString());
         System.out.println(myStrings.get(1));
         System.out.println(myStrings.size());

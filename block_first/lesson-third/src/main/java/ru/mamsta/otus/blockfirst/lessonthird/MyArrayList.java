@@ -88,7 +88,27 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public boolean addAll(int index, Collection<? extends T> c) {
-        return false;
+        checkNotNullElement(c);
+        checkIndexInArray(index);
+        int newSize = array.length + c.size();
+        if(newSize > max_size) {
+            throw new RuntimeException("newSize > max_size");
+        }
+        if(index == array.length - 1) {
+            return addAll(c);
+        }
+        if(array.length == 0) {
+            array = c.toArray();
+        }
+        Object[] oldArray = array;
+        array = new Object[newSize];
+        Object[] addArray = c.toArray();
+        int fromIndex = index + 1;
+        System.arraycopy(oldArray, 0, array, 0, index);
+        System.arraycopy(addArray, 0, array, index, addArray.length);
+        int nextIndex = addArray.length + index;
+        System.arraycopy(oldArray, index, array, nextIndex, (oldArray.length - index));
+        return true;
     }
 
     public boolean removeAll(Collection<?> c) {
@@ -134,9 +154,9 @@ public class MyArrayList<T> implements List<T> {
         int newIndex = array.length-1;
         Object[] oldArray = array;
         array = new Object[newIndex];
-        int toIndex = index+1;
+        int fromIndex = index+1;
         System.arraycopy(oldArray, 0, array, 0, index);
-        System.arraycopy(oldArray, toIndex, array, index, (oldArray.length - toIndex));
+        System.arraycopy(oldArray, fromIndex, array, index, (oldArray.length - fromIndex));
         return (T)oldArray[index];
     }
 
