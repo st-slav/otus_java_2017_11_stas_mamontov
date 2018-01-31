@@ -30,7 +30,7 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public boolean isEmpty() {
-        return array.length == 0;
+        return size() == 0;
     }
 
     public boolean contains(Object o) {
@@ -38,7 +38,24 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public Iterator<T> iterator() {
-        return null;
+
+        return new Iterator<T>() {
+
+            private int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return index < size();
+            }
+
+            @Override
+            public T next() {
+                checkIndexInArray(index);
+                T t = (T) array[index];
+                index++;
+                return t;
+            }
+        };
     }
 
     public Object[] toArray() {
@@ -51,7 +68,7 @@ public class MyArrayList<T> implements List<T> {
 
     public boolean add(T t) {
         checkNotNullElement(t);
-        int newIndex = array.length + 1;
+        int newIndex = size() + 1;
         if((newIndex) > max_size) {
             throw new RuntimeException(this.getClass().getCanonicalName() + " crowded; size: " + array.length + "; max size: " + max_size);
         }
@@ -70,13 +87,39 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public boolean containsAll(Collection<?> c) {
-        return false;
+        checkNotNullElement(c);
+        boolean flag = false;
+        if(c.isEmpty()) {
+            return flag;
+        }
+        if(isEmpty()) {
+            return flag;
+        }
+        Object[] containsArray = c.toArray();
+        for(int i = 0; i < containsArray.length; i++) {
+            for(int j = 0; j < size(); j++) {
+                if(array[j].equals(containsArray[i])){
+                    flag = true;
+                    break;
+                }
+            }
+            if(!flag) {
+                return flag;
+            } else {
+                flag = false;
+            }
+        }
+        return true;
     }
 
     public boolean addAll(Collection<? extends T> c) {
         checkNotNullElement(c);
-        if(array.length == 0) {
+        if(c.isEmpty()) {
+            return true;
+        }
+        if(isEmpty()) {
             array = c.toArray();
+            return true;
         }
         Object[] oldArray = array;
         Object[] arrayForAdd = c.toArray();
@@ -90,14 +133,17 @@ public class MyArrayList<T> implements List<T> {
     public boolean addAll(int index, Collection<? extends T> c) {
         checkNotNullElement(c);
         checkIndexInArray(index);
-        int newSize = array.length + c.size();
+        if(c.isEmpty()) {
+            return true;
+        }
+        int newSize = size() + c.size();
         if(newSize > max_size) {
             throw new RuntimeException("newSize > max_size");
         }
-        if(index == array.length - 1) {
+        if(index == size() - 1) {
             return addAll(c);
         }
-        if(array.length == 0) {
+        if(isEmpty()) {
             array = c.toArray();
         }
         Object[] oldArray = array;
@@ -120,7 +166,7 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public void clear() {
-        if (array.length > 0) {
+        if (size() > 0) {
             array = EMPTY_ARRAY;
         }
     }
@@ -146,12 +192,12 @@ public class MyArrayList<T> implements List<T> {
 
     public T remove(int index) {
         checkIndexInArray(index);
-        if (array.length == 1) {
+        if (size() == 1) {
             T res = (T) array[index];
             array = EMPTY_ARRAY;
             return res;
         }
-        int newIndex = array.length-1;
+        int newIndex = size()-1;
         Object[] oldArray = array;
         array = new Object[newIndex];
         int fromIndex = index+1;
@@ -162,8 +208,8 @@ public class MyArrayList<T> implements List<T> {
 
     public int indexOf(Object o) {
         checkNotNullElement(o);
-        if(!this.isEmpty()) {
-            for (int i = 0; i < array.length; i++) {
+        if(!isEmpty()) {
+            for (int i = 0; i < size(); i++) {
                 if(array[i].equals(o)) {
                     return i;
                 }
@@ -175,8 +221,8 @@ public class MyArrayList<T> implements List<T> {
     public int lastIndexOf(Object o) {
         checkNotNullElement(o);
         int index = -1;
-        if(!this.isEmpty()) {
-            for (int i = 0; i < array.length; i++) {
+        if(!isEmpty()) {
+            for (int i = 0; i < size(); i++) {
                 if(array[i].equals(o)) {
                     index = i;
                 }
@@ -186,11 +232,60 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public ListIterator<T> listIterator() {
-        return null;
+        return listIterator(0);
     }
 
     public ListIterator<T> listIterator(int index) {
-        return null;
+        checkIndexInArray(index);
+        return new ListIterator<T>() {
+
+            private int ind = index;
+
+            @Override
+            public boolean hasNext() {
+                return ind < size();
+            }
+
+            @Override
+            public T next() {
+                return null;
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return false;
+            }
+
+            @Override
+            public T previous() {
+                return null;
+            }
+
+            @Override
+            public int nextIndex() {
+                return 0;
+            }
+
+            @Override
+            public int previousIndex() {
+                return 0;
+            }
+
+            @Override
+            public void remove() {
+
+            }
+
+            @Override
+            public void set(T t) {
+
+            }
+
+            @Override
+            public void add(T t) {
+
+            }
+        };
     }
 
     public List<T> subList(final int fromIndex, final int toIndex) {
@@ -218,12 +313,11 @@ public class MyArrayList<T> implements List<T> {
     }
 
     private void checkIndexInArray(int index) {
-        if(index > array.length || index < 0)
-            throw new RuntimeException(this.getClass().getName() + " not found index: " + index + "; size: " + array.length);
+        if(index > size() || index < 0)
+            throw new RuntimeException(this.getClass().getName() + " not found index: " + index + "; size: " + size());
     }
 
     private void checkNotNullElement(Object o) {
-        if(Objects.isNull(o))
-            throw new NullPointerException(o.getClass().getName() + " == null");
+        Objects.requireNonNull(o);
     }
 }
